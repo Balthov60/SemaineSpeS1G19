@@ -51,7 +51,7 @@ int main(int argn, char* argv[]) {
 	int difficulty = 1;
 	int currentArtWorkId = NULL;
 	int timer = 60 * 5 * 1000;
-	int ArtWorkSteelQty = 0;
+	int artWorkSteelQty = 0;
 
 	char mapPath[20];
 	char editMapPath[20] = ".\\data\\musee3.txt";
@@ -69,12 +69,12 @@ int main(int argn, char* argv[]) {
 	SDL_Rect player;
 	int targetPlayerX;
 	int targetPlayerY;
-	int playerSpeed = 5;
+	int playerSpeed = 4;
 
 	// Creation gardes
 	bool initGuards = false;
 	int guardsQty = 0;
-	SDL_Rect * Guards = NULL;
+	SDL_Rect * guardsTab = NULL;
 	int guardsSpeed = 2;
 
 	// Lancement du jeu
@@ -135,7 +135,7 @@ int main(int argn, char* argv[]) {
 						int x = player.x; int y = player.y; int artWorkId;
 						getPlayerInGameLocation(x, y);
 						if (getArtWorkUnderWatch(tabMap, x, y, artWorkId)) {
-							ArtWorkSteelQty++;
+							artWorkSteelQty++;
 							for (int i = 0; i < MAP_BLOCK_Y; i++) {
 								for (int j = 0; j < MAP_BLOCK_X - 1; j++) {
 									if (tabMap[j][i] == artWorkId) {
@@ -154,7 +154,7 @@ int main(int argn, char* argv[]) {
 						}
 						if (tabMap[x + 1][y] == 3 || tabMap[x][y + 1] == 3 || tabMap[x - 1][y] == 3 || tabMap[x][y - 1] == 3) {
 							cout << "DEBUG : OUT" << endl;
-							mod = launchGameEndMod(render, ArtWorkSteelQty, true);
+							mod = launchGameEndMod(render, artWorkSteelQty, true);
 						}
 					}
 					break;
@@ -192,7 +192,7 @@ int main(int argn, char* argv[]) {
 
 						timer = 60 * 5 * 1000 / difficulty;
 						if (difficulty == 1) {
-							playerSpeed = 5;
+							playerSpeed = 4;
 							guardsSpeed = 2;
 						}
 						else if (difficulty == 2) {
@@ -210,7 +210,7 @@ int main(int argn, char* argv[]) {
 						sprintf(temp, "%d", museumID);
 						strcat(mapPath, temp);
 						strcat(mapPath, ".txt");
-						mod = launchPlayMod(render, tabMap, timer, mod, player, mapPath, initGuards, guardsQty, Guards, ArtWorkSteelQty);
+						mod = launchPlayMod(render, tabMap, timer, mod, player, mapPath, initGuards, guardsQty, guardsTab, artWorkSteelQty);
 						break;
 					}
 				}
@@ -241,13 +241,13 @@ int main(int argn, char* argv[]) {
 			playerMove(render, player, targetPlayerX, targetPlayerY, tabMap, currentArtWorkId, museumID, playerSpeed);
 			SDL_bool SDL_HasIntersection(const SDL_Rect * player, const SDL_Rect * Guard); //Gestion des collisions entre joueur et gardiens
 			for (int i = 0; i < guardsQty; i++) {
-				if (SDL_HasIntersection(&player, &Guards[i])) {
+				if (SDL_HasIntersection(&player, &guardsTab[i])) {
 					mod = launchGameEndMod(render, 0, false);
 					break;
 				}
-				if (ArtWorkSteelQty > 0 || !initGuards) {
+				if (artWorkSteelQty > 0 || !initGuards) {
 					for (int i = 0; i < guardsQty; i++) {
-						guardMove(render, Guards[i], player, tabMap, guardsSpeed);
+						guardMove(render, guardsTab[i], player, tabMap, guardsSpeed);
 					}
 				}
 				initGuards = true;
@@ -255,7 +255,7 @@ int main(int argn, char* argv[]) {
 		}
 	}
 	// destruction guardes
-	delete[] Guards;
+	delete[] guardsTab;
 
 	// destruction SDL
 	SDL_DestroyRenderer(render);

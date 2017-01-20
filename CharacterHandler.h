@@ -1,6 +1,6 @@
 /* Fonctions et constance de déplacement du joueur */
 
-const int CHARACTER_SIZE = 10; // Dimension du personnagess
+const int CHARACTER_SIZE = 10; // Dimension des personnages
 
 // Joueur
 void playerMove(SDL_Renderer * render, SDL_Rect & player, int targetPlayerX, int targetPlayerY, int tabMap[MAP_BLOCK_X][MAP_BLOCK_Y], int & currentArtWorkId, int museumID, int playerSpeed);

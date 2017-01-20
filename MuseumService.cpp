@@ -9,15 +9,15 @@ using namespace std;
 
 // Renvoi un tableau d'oeuvre d'art : id, nom, descriptif, path
 void getMuseumArtWorkByID(char ***& artWorkInformations, int workArtID, char dataBasePath[]) {
-	ostringstream req;
+	ostringstream sqlRequest;
 	int line, column;
 
-	req.str("");
-	req << "select * from tableaux where idTableau = " << workArtID;
+	sqlRequest.str("");
+	sqlRequest << "select * from tableaux where idTableau = " << workArtID;
 
 	sqlite3 * dataBase;
 	dataBase = bd_ouvrir(dataBasePath);
-	bd_requeteSelect(dataBase, req.str().c_str(), artWorkInformations, line, column);
+	bd_requeteSelect(dataBase, sqlRequest.str().c_str(), artWorkInformations, line, column);
 	bd_fermer(dataBase);
 	
 	cout << "DEBUG : SQL Request. line = " << line << " column = " << column << endl;
@@ -28,20 +28,20 @@ void getMuseumArtWorkByID(char ***& artWorkInformations, int workArtID, char dat
 	}
 
 	bd_fermer(dataBase);
-	req.str("");
+	sqlRequest.str("");
 }
 
 void getMuseumArtWorkIdForCurrentMuseum(int & artWorkID, int museumID, char dataBasePath[]) {
-	ostringstream req;
+	ostringstream sqlRequest;
 	int line, column;
 	char *** resultTab;
 
-	req.str("");
-	req << "select idTableau from association where numero = " << artWorkID << " and idMusee = " << museumID;
+	sqlRequest.str("");
+	sqlRequest << "select idTableau from association where numero = " << artWorkID << " and idMusee = " << museumID;
 
 	sqlite3 * dataBase;
 	dataBase = bd_ouvrir(dataBasePath);
-	bd_requeteSelect(dataBase, req.str().c_str(), resultTab, line, column);
+	bd_requeteSelect(dataBase, sqlRequest.str().c_str(), resultTab, line, column);
 	bd_fermer(dataBase);
 
 	cout << "DEBUG : SQL Request. line = " << line << " column = " << column << endl;
@@ -52,22 +52,22 @@ void getMuseumArtWorkIdForCurrentMuseum(int & artWorkID, int museumID, char data
 	}
 
 	bd_fermer(dataBase);
-	req.str("");
+	sqlRequest.str("");
 
 	artWorkID = resultTab[0][0][0] - 48;
 }
 
 int getMuseumQty(char dataBasePath[]) {
-	ostringstream req;
+	ostringstream sqlRequest;
 	int line, column;
 	char *** resultTab;
 
-	req.str("");
-	req << "SELECT count(id) from musees";
+	sqlRequest.str("");
+	sqlRequest << "SELECT count(id) from musees";
 
 	sqlite3 * dataBase;
 	dataBase = bd_ouvrir(dataBasePath);
-	bd_requeteSelect(dataBase, req.str().c_str(), resultTab, line, column);
+	bd_requeteSelect(dataBase, sqlRequest.str().c_str(), resultTab, line, column);
 	bd_fermer(dataBase);
 
 	cout << "DEBUG : SQL Request. line = " << line << " column = " << column << endl;
@@ -78,22 +78,22 @@ int getMuseumQty(char dataBasePath[]) {
 	}
 
 	bd_fermer(dataBase);
-	req.str("");
+	sqlRequest.str("");
 
 	return (int)resultTab[0][0][0] - 48;
 }
 
 char * getMuseumName(int museumID, char dataBasePath[]) {
-	ostringstream req;
+	ostringstream sqlRequest;
 	int line, column;
 	char *** resultTab;
 
-	req.str("");
-	req << "SELECT nom from musees where id = " << museumID;
+	sqlRequest.str("");
+	sqlRequest << "SELECT nom from musees where id = " << museumID;
 
 	sqlite3 * dataBase;
 	dataBase = bd_ouvrir(dataBasePath);
-	bd_requeteSelect(dataBase, req.str().c_str(), resultTab, line, column);
+	bd_requeteSelect(dataBase, sqlRequest.str().c_str(), resultTab, line, column);
 	bd_fermer(dataBase);
 
 	cout << "DEBUG : SQL Request. line = " << line << " column = " << column << endl;
@@ -104,7 +104,7 @@ char * getMuseumName(int museumID, char dataBasePath[]) {
 	}
 
 	bd_fermer(dataBase);
-	req.str("");
+	sqlRequest.str("");
 
 	return resultTab[0][0];
 }
